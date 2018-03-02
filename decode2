@@ -1,0 +1,35 @@
+#!/usr/bin/env stack
+-- stack --resolver lts-10.7 script --package aeson,bytestring,text
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
+import Data.Aeson
+import Data.Aeson.Types (defaultOptions)
+import qualified Data.ByteString.Lazy.Char8 as BL
+import qualified Data.Text as T
+import GHC.Generics
+
+data Computer = Computer {
+    formFactor :: FormFactor
+  , gbRam  :: Int
+  } deriving (Show, Generic)
+
+data FormFactor = Laptop | Desktop 
+  deriving (Show, Generic)
+
+instance FromJSON Computer where
+  parseJSON = genericParseJSON (defaultOptions {
+      fieldLabelModifier = camelTo2 '_'
+    })
+
+instance FromJSON FormFactor where
+  parseJSON = genericParseJSON (defaultOptions {
+      constructorTagModifier = camelTo2 '_'
+    })
+  
+
+main = do
+  bs <- BL.getContents
+  let r :: Either String Computer 
+      r = eitherDecode bs
+  print r
+

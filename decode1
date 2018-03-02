@@ -1,0 +1,30 @@
+#!/usr/bin/env stack
+-- stack --resolver lts-10.7 script --package aeson,bytestring
+{-# LANGUAGE OverloadedStrings #-}
+import Data.Aeson
+import qualified Data.ByteString.Lazy.Char8 as BL
+
+data Computer = Computer {
+    formFactor :: FormFactor
+  , gbRam  :: Int
+  } deriving Show
+
+data FormFactor = Laptop | Desktop 
+  deriving Show
+
+instance FromJSON Computer where
+  parseJSON (Object v) = 
+      Computer <$> v .: "form_factor" <*> v .: "gb_ram"
+  parseJSON _ = mempty
+
+instance FromJSON FormFactor where
+  parseJSON (String "laptop") = pure Laptop
+  parseJSON (String "desktop") = pure Desktop
+
+
+main = do
+  bs <- BL.getContents
+  let r :: Either String Computer 
+      r = eitherDecode bs
+  print r
+

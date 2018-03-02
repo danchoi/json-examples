@@ -1,0 +1,37 @@
+#!/usr/bin/env stack
+-- stack --resolver lts-10.7 script --package aeson,bytestring,text
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
+import Data.Aeson
+import Data.Aeson.Types (defaultOptions)
+import qualified Data.ByteString.Lazy.Char8 as BL
+import qualified Data.Text as T
+import GHC.Generics
+
+data Computer = Computer {
+    formFactor :: FormFactor
+  , gbRam  :: Int
+  , peripherals :: [Peripheral]
+  } deriving (Show, Generic)
+
+data FormFactor = Laptop | Desktop 
+  deriving (Show, Generic)
+
+data Peripheral = 
+        Mouse
+      | Keyboard
+  deriving (Show, Generic)
+
+instance ToJSON Computer where
+  toJSON = genericToJSON (defaultOptions { fieldLabelModifier = camelTo2 '_' })
+
+instance ToJSON FormFactor where
+  toJSON = genericToJSON (defaultOptions { constructorTagModifier = camelTo2 '_' })
+
+instance ToJSON Peripheral where
+  toJSON = genericToJSON (defaultOptions { constructorTagModifier = camelTo2 '_' })
+
+main = do
+  let c = Computer Desktop 16 [Mouse, Keyboard]
+  BL.putStrLn . encode $ c
+
