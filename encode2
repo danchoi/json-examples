@@ -23,13 +23,22 @@ data Peripheral =
   deriving (Show, Generic)
 
 instance ToJSON Computer where
-  toJSON = genericToJSON (defaultOptions { fieldLabelModifier = camelTo2 '_' })
+  toJSON = genericToJSON (
+      defaultOptions { 
+        fieldLabelModifier = camelTo2 '_' 
+      })
 
 instance ToJSON FormFactor where
-  toJSON = genericToJSON (defaultOptions { constructorTagModifier = camelTo2 '_' })
+  toJSON = genericToJSON (
+      defaultOptions { 
+        constructorTagModifier = camelTo2 '_' 
+      })
 
 instance ToJSON Peripheral where
-  toJSON = genericToJSON (defaultOptions { constructorTagModifier = camelTo2 '_' })
+  toJSON = genericToJSON (
+      defaultOptions { 
+        constructorTagModifier = camelTo2 '_' 
+      })
 
 main = do
   let c = Computer Desktop 16 [Mouse, Keyboard]

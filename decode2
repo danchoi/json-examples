@@ -23,17 +23,22 @@ data Peripheral =
   deriving (Show, Generic)
 
 instance FromJSON Computer where
-  parseJSON = genericParseJSON (defaultOptions {
+  parseJSON = genericParseJSON (
+    defaultOptions {
       fieldLabelModifier = camelTo2 '_'
     })
 
 instance FromJSON FormFactor where
-  parseJSON = genericParseJSON (defaultOptions {
+  parseJSON = genericParseJSON (
+    defaultOptions {
       constructorTagModifier = camelTo2 '_'
     })
   
 instance FromJSON Peripheral where
-  parseJSON = genericParseJSON (defaultOptions { constructorTagModifier = camelTo2 '_' })
+  parseJSON = genericParseJSON (
+    defaultOptions { 
+        constructorTagModifier = camelTo2 '_' 
+    })
 
 
 main = do
