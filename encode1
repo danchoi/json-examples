@@ -22,23 +22,23 @@ data Peripheral =
       | Keyboard
   deriving (Show, Generic)
 
-instance FromJSON Computer where
-  parseJSON = genericParseJSON (defaultOptions {
-      fieldLabelModifier = camelTo2 '_'
-    })
+instance ToJSON Computer where
+  toJSON (Computer f g ps) = object [
+      "form_factor" .= f
+    , "gb_ram" .= g 
+    , "peripherals" .= ps
+    ]
 
-instance FromJSON FormFactor where
-  parseJSON = genericParseJSON (defaultOptions {
-      constructorTagModifier = camelTo2 '_'
-    })
-  
-instance FromJSON Peripheral where
-  parseJSON = genericParseJSON (defaultOptions { constructorTagModifier = camelTo2 '_' })
+instance ToJSON FormFactor where
+  toJSON Laptop = String "laptop"
+  toJSON Desktop = String "desktop"
 
+instance ToJSON Peripheral where
+  toJSON Mouse = String "mouse"
+  toJSON Keyboard  = String "keyboard"
 
 main = do
-  bs <- BL.getContents
-  let r :: Either String Computer 
-      r = eitherDecode bs
-  print r
+  let c = Computer Desktop 16 [Mouse, Keyboard]
+  BL.putStrLn . encode $ c
+
 

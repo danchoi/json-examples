@@ -7,20 +7,32 @@ import qualified Data.ByteString.Lazy.Char8 as BL
 data Computer = Computer {
     formFactor :: FormFactor
   , gbRam  :: Int
+  , peripherals :: [Peripheral]
   } deriving Show
 
 data FormFactor = Laptop | Desktop 
   deriving Show
 
+data Peripheral = 
+        Mouse
+      | Keyboard
+  deriving Show
+
 instance FromJSON Computer where
   parseJSON (Object v) = 
-      Computer <$> v .: "form_factor" <*> v .: "gb_ram"
+      Computer 
+        <$> v .: "form_factor" 
+        <*> v .: "gb_ram"
+        <*> v .: "peripherals"
   parseJSON _ = mempty
 
 instance FromJSON FormFactor where
   parseJSON (String "laptop") = pure Laptop
   parseJSON (String "desktop") = pure Desktop
 
+instance FromJSON Peripheral where
+  parseJSON (String "mouse") = pure Mouse
+  parseJSON (String "keyboard") = pure Keyboard
 
 main = do
   bs <- BL.getContents
