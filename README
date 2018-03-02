@@ -1,1 +1,21 @@
 JSON tutorial
+
+
+Encoding examples
+
+  encode1
+
+  encode2 generics
+
+
+  decode1 
+
+  decode2 generics
+
+
+How much overhead in parsing?
+
+stack ghc pipe.hs
+
+time ./pipe < input.json  | ./pipe | ./pipe | ./pipe | ./pipe | ./pipe | ./pipe | ./pipe | ./pipe
+
